@@ -23,37 +23,35 @@ public class HeartDiagnosis {
 
             File inputTrainFile = new File(args[0]);
             File inputTestFile = new File(args[1]);
-            DataPoint<Boolean> dp = new DataPoint<>();
-            LinkedList<DataPoint<Boolean>> dplstTrain = dp.convertToBoolean(dp.buildDatapointList(inputTrainFile,0,1,22,"1"), "1");
-	    LinkedList<DataPoint<Boolean>> dplstTest = dp.convertToBoolean(dp.buildDatapointList(inputTestFile,0,1,22,"1"), "1");
+            Dataset trainSet = new Dataset(inputTrainFile,0,1,22,"1").convertToBoolean("1");
+            Dataset testSet = new Dataset(inputTestFile,0,1,22,"1").convertToBoolean("1");
             
             // train a traditional decision tree
             DecisionTree<Boolean> dtOfHD = new DecisionTree<>();
             DecisionTree.DTreeNode<Boolean> root1;
-            root1 = dtOfHD.trainDecistionTree(dplstTrain,10);
+            root1 = dtOfHD.train(trainSet,10);
             dtOfHD.printDecisionTree(root1);
-            System.out.println("Accuracy on training set: " + dtOfHD.evaluate(dplstTrain, root1));
-            System.out.println("Accuracy on test set: " + dtOfHD.evaluate(dplstTest, root1));
+            System.out.println("Accuracy on training set: " + dtOfHD.evaluate(trainSet, root1));
+            System.out.println("Accuracy on test set: " + dtOfHD.evaluate(testSet, root1));
             
-            // adaboost decision trees with a limited number of attributes.
-            
-            AdaBoostingOnALtree ab3 = new AdaBoostingOnALtree(dplstTrain,dplstTest);
+            // adaboost decision trees with a limited number of attributes. 
+            AdaBoostingOnALtree ab3 = new AdaBoostingOnALtree(trainSet,testSet);
             System.out.println("Begin boosting... Number of rounds: 3.....................................");
             ab3.boost(3);
             
-            AdaBoostingOnALtree ab10 = new AdaBoostingOnALtree(dplstTrain,dplstTest);
+            AdaBoostingOnALtree ab10 = new AdaBoostingOnALtree(trainSet,testSet);
             System.out.println("Begin boosting... Number of rounds: 10....................................");
             ab10.boost(10);
            
             // coordinate decent on  trees with height one
-            CoordinateDescent cd = new CoordinateDescent(dplstTrain,dplstTest);
+            CoordinateDescent cd = new CoordinateDescent(trainSet,testSet);
             System.out.println("Begin coordinate descend... Unlimited rounds................................");
             cd.descent();
-            System.out.println("Final accuracy on test set: "+ cd.evaluate(dplstTest));
+            System.out.println("Final accuracy on test set: "+ cd.evaluate(testSet));
             System.out.println("Alpha: " + cd.hypothesisSpace.values().toString());
             
             // adaboost decision trees with height one
-            AdaBoostingOnOLtree ab20 = new AdaBoostingOnOLtree(dplstTrain,dplstTest);
+            AdaBoostingOnOLtree ab20 = new AdaBoostingOnOLtree(trainSet,testSet);
             System.out.println("Begin boosting... Number of rounds: 20......................................");
             ab20.boost(20);
             System.out.println("Alpha: " + ab20.choosenTrees.values().toString());

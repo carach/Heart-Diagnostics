@@ -15,12 +15,12 @@ import java.util.Map.Entry;
  * @author Mousie
  */
 public class CoordinateDescent {
-    LinkedList<DataPoint<Boolean>> dptraininglst;
-    LinkedList<DataPoint<Boolean>> dptestlst;
+    Dataset dptraininglst;
+    Dataset dptestlst;
     
     HashMap<OneLevelDecisionTree,Double> hypothesisSpace;       
     
-    public CoordinateDescent(LinkedList<DataPoint<Boolean>> dplstTrain, LinkedList<DataPoint<Boolean>> dplstTest){
+    public CoordinateDescent(Dataset dplstTrain, Dataset dplstTest){
         dptraininglst = dplstTrain;
         dptestlst = dplstTest;
         hypothesisSpace = addTreeToHypothesisSpace();
@@ -138,7 +138,7 @@ public class CoordinateDescent {
         return value > 0;           
     }
     
-    public double evaluate(LinkedList<DataPoint<Boolean>> dplst)
+    public double evaluate(Dataset dplst)
     {
         int corr = 0;
         for( DataPoint<Boolean> dp: dplst)

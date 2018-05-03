@@ -12,19 +12,19 @@ import java.util.Map.Entry;
 
 /**
  *
- * @author Mousie
+ * @author Cara
  */
 public class AdaBoostingOnALtree {
     
-    LinkedList<DataPoint<Boolean>> dptraininglst;
-    LinkedList<DataPoint<Boolean>> dptestlst;
+    Dataset dptraininglst;
+    Dataset dptestlst;
     
     LinkedList<AttrLimitedDecisionTree> hypothesisSpace;   
     HashMap<DataPoint<Boolean>,Double> weights = new HashMap<>();    
     double epsilon;
     HashMap<AttrLimitedDecisionTree,Double> choosenTrees;
 
-    public AdaBoostingOnALtree(LinkedList<DataPoint<Boolean>> dplstTrain, LinkedList<DataPoint<Boolean>> dplstTest){
+    public AdaBoostingOnALtree(Dataset dplstTrain, Dataset dplstTest){
         dptraininglst = dplstTrain;
         dptestlst = dplstTest;
         int m = dptraininglst.size();
@@ -111,7 +111,7 @@ public class AdaBoostingOnALtree {
     }
     /* select a tree within hypothesis space which has a minimium weighted error.
     * 
-    * @param LinkedList<DataPoint<AnyType>>
+    * @param Dataset
     * return the root of the select tree
     * also update epsilon
     */
@@ -170,7 +170,7 @@ public class AdaBoostingOnALtree {
             
     }
     
-    public double evaluate(LinkedList<DataPoint<Boolean>> dplst)
+    public double evaluate(Dataset dplst)
     {
         int corr = 0;
         for(DataPoint<Boolean> dp: dplst)

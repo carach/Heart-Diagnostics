@@ -12,17 +12,17 @@ import java.util.Map;
 
 /**
  *
- * @author Mousie
+ * @author Cara
  */
 public class AdaBoostingOnOLtree {
-    LinkedList<DataPoint<Boolean>> dptraininglst;
-    LinkedList<DataPoint<Boolean>> dptestlst;
+    Dataset dptraininglst;
+    Dataset dptestlst;
     
     LinkedList<OneLevelDecisionTree> hypothesisSpace;   
     HashMap<DataPoint<Boolean>,Double> weights;    
     double epsilon;
     HashMap<OneLevelDecisionTree,Double> choosenTrees;
-    public AdaBoostingOnOLtree(LinkedList<DataPoint<Boolean>> dplstTrain, LinkedList<DataPoint<Boolean>> dplstTest)
+    public AdaBoostingOnOLtree(Dataset dplstTrain, Dataset dplstTest)
     {
         dptraininglst = dplstTrain;
         dptestlst = dplstTest;
@@ -135,7 +135,7 @@ public class AdaBoostingOnOLtree {
             
     }
     
-    public double evaluate(LinkedList<DataPoint<Boolean>> dplst)
+    public double evaluate(Dataset dplst)
     {
         int corr = 0;
         for(DataPoint<Boolean> dp: dplst)
