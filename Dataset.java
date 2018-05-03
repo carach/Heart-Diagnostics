@@ -54,7 +54,7 @@ public class Dataset extends LinkedList<DataPoint>{
             return null;
         Dataset bds = new Dataset();
         
-        for(DataPoint<Boolean> dp: this) {
+        for(DataPoint<String> dp: this) {
             Boolean[] m = new Boolean[dp.x.length];
             for( int i = 0; i < m.length; i++)
                 m[i] = dp.x[i].equals(labelToBeTrue);
