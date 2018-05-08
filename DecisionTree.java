@@ -13,26 +13,35 @@ import java.util.LinkedList;
 /**
  * Decision Tree by greedy heuristic based approach
  * @author Cara
- * @param <T>
+ * 
  */
 public class DecisionTree<T> {
-    
+
     public static class DTreeNode<T> {
         boolean outputVal;
         boolean majorityVote;   // in case no match for the new point, need to depend on majority vote
         int attrIndex;    // indicate which attibute it is working on
         boolean isLeaf;     // tell if the node is the last level of a path to make final dicision, only when isLeaf is true the outputVal makes sense
-        
-        DTreeNode<T> parent;
-        
+        DTreeNode<T> parent;    
         ArrayList<Integer> usedAttr = new ArrayList<>();
         HashMap<T, Dataset> hmlst = new HashMap<>();      // map a label to its subset of training data
         HashMap<T, DTreeNode> children = new HashMap<>();
-        DTreeNode(int x) { attrIndex = x; }
-        DTreeNode(){}
+
+        public DTreeNode(int x) {
+            attrIndex = x;
+            ArrayList<Integer> usedAttr = new ArrayList<>();
+            HashMap<T, Dataset> hmlst = new HashMap<>();      // map a label to its subset of training data
+            HashMap<T, DTreeNode> children = new HashMap<>();
+        }
+        
+        DTreeNode() {
+            ArrayList<Integer> usedAttr = new ArrayList<>();
+            HashMap<T, Dataset> hmlst = new HashMap<>();      // map a label to its subset of training data
+            HashMap<T, DTreeNode> children = new HashMap<>();
+        }
     }
     
-    // helper variable to compute entropy of an identical lable under an attribute
+    // helper inner class to compute entropy of an identical lable under an attribute
     public class Counter{
         T label;
         int num = 0;
@@ -67,10 +76,9 @@ public class DecisionTree<T> {
     /* @para Dataset
     */
 
-    public DTreeNode<T> nodeBuilder(Dataset dplst){
-        
-        int tr = 0;
-        int fs = 0;
+    public DTreeNode<T> nodeBuilder(Dataset dplst){ 
+        int tr = 0; // counter for y = true;
+        int fs = 0; // counter for y = false; 
         double HY;
         
         DTreeNode<T> newNode = new DTreeNode<>();
@@ -159,14 +167,11 @@ public class DecisionTree<T> {
     * @param Dataset
     * return the root of the learned tree
     */
-    public DTreeNode train(
-        Dataset trainlist)
-    {
+    public DTreeNode train(Dataset trainlist) {
         return train(trainlist,Integer.MAX_VALUE);
     }
     
-    public DTreeNode train(Dataset trainlist,int maxDepth)
-    {     
+    public DTreeNode train(Dataset trainlist,int maxDepth) {     
         DTreeNode<T> root = nodeBuilder(trainlist);
         DTreeNode<T> curr = root;
         
@@ -195,7 +200,7 @@ public class DecisionTree<T> {
                 
     }
     
-    /* recursively print out the decisiton level by level (but not precisely), given the root of the tree
+    /* recursively print out the decision tree level by level (but not precisely), given the root of the tree
     * @para DTreeNode<T>
     */
     public void printDecisionTree(DTreeNode<T> root)
@@ -223,12 +228,12 @@ public class DecisionTree<T> {
             return 0;
         
         for(DataPoint<T> dp: dplst)   
-            if (dp.y == getOutcome(dp, root))
+            if (dp.y == predict(dp, root))
                 corr++;
         
         return (double)corr/(double)dplst.size();
     }
-    public Boolean getOutcome(DataPoint<T> dp, DTreeNode<T> root)
+    public Boolean predict(DataPoint<T> dp, DTreeNode<T> root)
     {
         if (dp == null || root == null)
             return null;

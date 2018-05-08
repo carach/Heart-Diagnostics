@@ -12,7 +12,7 @@ import java.util.Scanner;
 /**
  *
  * @author Cara
- * @param <T>
+ * 
  */
 public class Dataset extends LinkedList<DataPoint>{
 
