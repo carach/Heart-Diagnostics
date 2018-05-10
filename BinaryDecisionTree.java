@@ -4,6 +4,7 @@ import java.util.LinkedList;
  * both predictors and response is binary
  * clean dataset
  * non-leaf node has a working attribute
+ * each attribute only splits the data once
  * leaf node predict the response value
  * unlimited tree depth
  */
@@ -12,7 +13,7 @@ import java.util.LinkedList;
  *
  * @author Cara
  */
-public class BinaryDecisionTree {
+public class BinaryDecisionTree implements Hypothesis<Boolean>  {
     BDTNode root;
     ArrayList<Integer> workingAttr = new ArrayList<>();   // the list of all the participant attributes
 
@@ -22,7 +23,8 @@ public class BinaryDecisionTree {
         BDTNode right;
         Boolean mVote;
 
-        public BDTNode (Dataset ds, Boolean vote) {     // this constructor recursively construct the nodes of the whole tree
+        public BDTNode () {}
+        public BDTNode (Dataset<Boolean> ds, Boolean vote) {     // this constructor recursively construct all the nodes of the whole tree
 
             if (ds == null || ds.isEmpty()) {   // If a partition contains no data points, use the majority vote at its parent, and make the node a leaf.
                 this.mVote = vote;   // mVote as the outcome value when it's a leaf node
@@ -30,15 +32,14 @@ public class BinaryDecisionTree {
                 return;
             }
             int attrLength = ds.getFirst().x.length;
-            Dataset leftDs = new Dataset();
-            Dataset rightDs = new Dataset();
+            Dataset<Boolean> leftDs = new Dataset<>();
+            Dataset<Boolean> rightDs = new Dataset<>();
             double maxConEn = Double.MAX_VALUE;    // the max conditional entropy
             for (int i = 0; i < attrLength; i++) {
                 if (BinaryDecisionTree.this.workingAttr.contains(i))   // if this attr. has been recursed on before, skip it
                     continue;
-                Dataset currLeftDs = new Dataset();
-                Dataset currRightDs = new Dataset();
-                boolean currVote;
+                Dataset<Boolean> currLeftDs = new Dataset<>();
+                Dataset<Boolean> currRightDs = new Dataset<>();
                 int[][] count = new int[][]{
                     {0,0},{0,0}
                 };
@@ -74,7 +75,7 @@ public class BinaryDecisionTree {
                             }
                             currConEn += en[j][k];
                         }
-                    System.out.println(currConEn);
+                    // System.out.println(currConEn);
                     if ( maxConEn > currConEn) {    // smaller conditional entropy found
                         maxConEn = currConEn;
                         attr = i;
@@ -106,8 +107,14 @@ public class BinaryDecisionTree {
         }
     }
 
+    // print the whole tree
+    public void print() {
+        print(this.root);
+    }
+
+    // recursively print the tree from the specific node
     public void print(BDTNode root) {
-        if (root == null)
+        if (this.root == null)
             return;
         System.out.println("Attribute Index: "+ root.attr);
         if (root.attr == -1)
@@ -117,7 +124,7 @@ public class BinaryDecisionTree {
             print(root.right);
         }
     }
-    public Boolean predict(DataPoint<Boolean> dp) {
+    public Boolean classify(DataPoint<Boolean> dp) {
         if (dp == null || this.root == null)
             return null;
         // boolean outcome;
@@ -132,15 +139,15 @@ public class BinaryDecisionTree {
         }
         return curr.mVote;
     }
-    public Double evaluate(Dataset ds)
+    public Double evaluate(Dataset<Boolean> ds)
     {
         int corr = 0;
         if (ds == null)
             return null;
         for(DataPoint<Boolean> dp: ds) {
-            if (predict(dp) == null) 
+            if (classify(dp) == null) 
                 return null;
-            else if (predict(dp).equals((Boolean)dp.y))
+            else if (classify(dp).equals((Boolean)dp.y))
                 corr++;
         }     
         return (double)corr/(double)ds.size();

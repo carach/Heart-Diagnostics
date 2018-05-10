@@ -6,7 +6,7 @@ import java.util.Scanner;
 /*
  * import an input file
  * convert predictors to string array and response to boolean.
- * provide a method to convert DataSet of string array predictors to DataSet of boolean array predictors.
+ * provide a method to convert Dataset of string array predictors to Dataset of boolean array predictors for those have binary predictors.
  */
 
 /**
@@ -14,21 +14,19 @@ import java.util.Scanner;
  * @author Cara
  * 
  */
-public class Dataset extends LinkedList<DataPoint>{
+public class Dataset<T> extends LinkedList<DataPoint<T>>{
 
     // constructor: read data from a file to construct an object of Dataset<String>
     public Dataset () {}
     public Dataset (File inputFile,int outputIndex, 
             int inputStartIndex, int inputEndIndex, String labelToBeTrue) throws FileNotFoundException {
         Scanner in = new Scanner (inputFile);
-        LinkedList<DataPoint<String>> ds  = new LinkedList<>();
         String line;
         String[] str;
         while(in.hasNextLine())
         {
             String[] m;
             m = new String[inputEndIndex - inputStartIndex + 1];
-            String tmp;
             boolean n;
             line = in.nextLine();
             str = line.split(",");
@@ -40,21 +38,19 @@ public class Dataset extends LinkedList<DataPoint>{
                 n = false;   
             this.add(new DataPoint(m,n));
         }
+        in.close();
     }
     
     /**
      *
-     * @param splst
      * @param labelToBeTrue
-     * @return
+     * @return a new Dataset<Boolean>
      */
-    public Dataset convertToBoolean(String labelToBeTrue)
+    public Dataset<Boolean> convertToBoolean(String labelToBeTrue)
     {
-        if( this == null)
-            return null;
-        Dataset bds = new Dataset();
+        Dataset<Boolean> bds = new Dataset();
         
-        for(DataPoint<String> dp: this) {
+        for(DataPoint dp: this) {
             Boolean[] m = new Boolean[dp.x.length];
             for( int i = 0; i < m.length; i++)
                 m[i] = dp.x[i].equals(labelToBeTrue);
