@@ -1,5 +1,4 @@
 import java.util.Arrays;
-import java.util.Vector;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
@@ -110,13 +109,13 @@ public class AttrLimitedDecisionTree extends BinaryDecisionTree{
     @Override
     public void print()
     {
-        System.out.println("Attributes: " + Arrays.toString(this.treeAttr)  + " " + "type: " + "Output; " + this.treetype + " " + Arrays.toString(this.treeOutput));
+        System.out.println("Attributes: " + Arrays.toString(this.treeAttr)  + " " + "type: " + this.treetype + " Output: " + Arrays.toString(this.treeOutput));
     }
     
-    // method to construct a hypothesis space enummerating all the trees
+    // method to construct a hypothesis space enumerating all the trees
     // @param the number of the attributes
-    public Vector<AttrLimitedDecisionTree> enummerate(Dataset<Boolean> ds) {
-        Vector<AttrLimitedDecisionTree> hypothesisSpace = new Vector<>();
+    public ArrayList<AttrLimitedDecisionTree> enumerate(Dataset<Boolean> ds) {
+        ArrayList<AttrLimitedDecisionTree> hypothesisSpace = new ArrayList<>();
 
         ArrayList<int[]> attrSet = new ArrayList<>();   // the combination of all  3 attributes
         int n = ds.getFirst().x.length;

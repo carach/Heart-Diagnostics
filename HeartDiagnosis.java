@@ -34,8 +34,7 @@ public class HeartDiagnosis {
             // System.out.println("Accuracy on test set: " + dtOfHD.evaluate(testSet, root1));
             
             // train a binary decision tree
-            BinaryDecisionTree HDbdt = new BinaryDecisionTree();
-            HDbdt.root = HDbdt.new BDTNode(trainSet, null);
+            BinaryDecisionTree HDbdt = new BinaryDecisionTree(trainSet);
             System.out.println("binary decision tree trained.");
             HDbdt.print();
             System.out.println("Accuracy on training set: " + HDbdt.evaluate(trainSet));
@@ -43,13 +42,12 @@ public class HeartDiagnosis {
 
             
             // adaboost decision trees with a limited number of attributes. 
-            AdaBooster ab3 = new AdaBooster(trainSet);
-            System.out.println("Begin boosting... Number of rounds: 3.....................................");
-            ab3.boost(new AttrLimitedDecisionTree().enummerate(trainSet),trainSet, testSet,3);
+            AdaBooster ab = new AdaBooster(trainSet);
+            System.out.println("Begin boosting on trees with no. of attributes less than 3... Number of rounds: 3.....................................");
+            ab.boost(new AttrLimitedDecisionTree().enumerate(trainSet),trainSet, testSet,3);
             
-            AdaBooster ab10 = new AdaBooster(trainSet);
-            System.out.println("Begin boosting... Number of rounds: 10....................................");
-            ab10.boost(new AttrLimitedDecisionTree().enummerate(trainSet), trainSet, testSet,10);
+            System.out.println("Begin boosting on trees with no. of attributes less than 3... Number of rounds: 10....................................");
+            ab.boost(new AttrLimitedDecisionTree().enumerate(trainSet), trainSet, testSet, 10);
            
             // // coordinate decent on trees with height one
             // CoordinateDescent cd = new CoordinateDescent(trainSet,testSet);
@@ -58,15 +56,13 @@ public class HeartDiagnosis {
             // System.out.println("Final accuracy on test set: "+ cd.evaluate(testSet));
             // System.out.println("Alpha: " + cd.hypothesisSpace.values().toString());
             
-            // // adaboost decision trees with height one
-            // AdaBoostingOnOLtree ab20 = new AdaBoostingOnOLtree(trainSet,testSet);
-            // System.out.println("Begin boosting... Number of rounds: 20......................................");
-            // ab20.boost(20);
-            // System.out.println("Alpha: " + ab20.choosenTrees.values().toString());
+            // adaboost decision trees with height one
+            System.out.println("Begin boosting on trees with depth = 1... Number of rounds: 20......................................");
+            ab.boost(new OneLevelDecisionTree().enumerate(trainSet), trainSet, testSet, 20);
             
         } 
         else {
 	    System.out.println("Pleas specify input file");
-	}
+	    }
     }
 }

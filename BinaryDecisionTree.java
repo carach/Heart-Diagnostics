@@ -15,8 +15,15 @@ import java.util.LinkedList;
  */
 public class BinaryDecisionTree implements Hypothesis<Boolean>  {
     BDTNode root;
-    ArrayList<Integer> workingAttr = new ArrayList<>();   // the list of all the participant attributes
-
+    ArrayList<Integer> workingAttr;   // the list of all the participant attributes
+    public BinaryDecisionTree (Dataset<Boolean> trainSet) {
+        workingAttr = new ArrayList<>();
+        root = new BDTNode(trainSet, null);
+    }
+    public BinaryDecisionTree () {}
+    public BinaryDecisionTree (int num) {   // specify the number of attibute which are going to train the tree
+        workingAttr = new ArrayList<>(num);
+    }
     public class BDTNode {   // decision binary tree node
         int attr;   // when attr = -1, it is a leaf; when attr >= 0, it specifies the working attribute and mVote makes sense for its children or for a fixed depth decision tree
         BDTNode left;
